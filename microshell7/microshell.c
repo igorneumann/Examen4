@@ -1,6 +1,6 @@
 #include <errno.h>
-#include <string.h>
 #include <unistd.h>
+#include <string.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -21,9 +21,9 @@ int	ft_strlen(char *str)
 	return (i);
 }
 
-void	ft_putstr_fd(char *str, int fd)
+void ft_putstr_fd(char *str, int fd)
 {
-	write (fd, str, ft_strlen(str));
+	write(fd, str, ft_strlen(str));
 }
 
 void error(char *msg, char *arg)
@@ -48,7 +48,7 @@ void	ft_pipes(int fd[2], int rw)
 {
 	if (pipes)
 	{
-		if (dup2(fd[rw], rw) == -1 || close(fd[READ]) == -1 || close (fd[WRITE]) == -1 )
+		if (dup2(fd[rw], rw) == -1 || close(fd[READ]) == -1 || close(fd[WRITE]) == -1)
 			error ("fatal", NULL);
 	}
 }
@@ -57,15 +57,15 @@ void	cd(char **argv)
 {
 	int i = 0;
 
-	while (argv[i])
+	while(argv[i])
 		i++;
 	if (i != 2)
 		return (error("cd: bad arguments", NULL));
 	if (chdir(argv[1]) == -1)
-		error ("cd: cannot change directory to: ", argv[1]);
+		error("cd: cannot change directory to: ", argv[1]);
 }
 
-void	execute(char **argv, char **envp)
+void execute(char **argv, char **envp)
 {
 	pid_t	pid;
 	int		fd[2];
@@ -74,7 +74,7 @@ void	execute(char **argv, char **envp)
 		return (cd(argv));
 	if (pipes)
 		if (pipe(fd) == -1)
-			error("fatal", NULL);
+			error ("fatal", NULL);
 	pid = fork();
 	if (pid == 0)
 	{
@@ -82,17 +82,17 @@ void	execute(char **argv, char **envp)
 		if (execve(argv[0], argv, envp) == -1)
 			error("cannot execute argument ", argv[0]);
 	}
-	else
+	else 
 		ft_pipes(fd, 0);
 }
 
-void	command(char **cmd, char **envp)
+void command(char **cmd, char **envp)
 {
 	int i = -1;
 	int pos = 0;
 	int nproc = 0;
 
-	while(cmd[++i])
+	while (cmd[++i])
 	{
 		if (!strcmp(cmd[i], "|") || !cmd[i + 1])
 		{
@@ -129,5 +129,5 @@ int main(int argc, char **argv, char **envp)
 		}
 		restorefd();
 	}
-	return(0);
+	return (0);
 }

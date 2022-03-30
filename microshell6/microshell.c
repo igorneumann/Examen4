@@ -12,7 +12,7 @@
 int pipes;
 int backup;
 
-int	ft_strlen(char *str)
+int		ft_strlen(char *str)
 {
 	int i = 0;
 
@@ -23,10 +23,10 @@ int	ft_strlen(char *str)
 
 void	ft_putstr_fd(char *str, int fd)
 {
-	write (fd, str, ft_strlen(str));
+	write(fd, str, ft_strlen(str));
 }
 
-void error(char *msg, char *arg)
+void	error(char *msg, char *arg)
 {
 	ft_putstr_fd("error: ", ERROR);
 	ft_putstr_fd(msg, ERROR);
@@ -48,7 +48,7 @@ void	ft_pipes(int fd[2], int rw)
 {
 	if (pipes)
 	{
-		if (dup2(fd[rw], rw) == -1 || close(fd[READ]) == -1 || close (fd[WRITE]) == -1 )
+		if (dup2(fd[rw], rw) == -1 || close(fd[READ]) == -1 || close (fd[WRITE]) == -1)
 			error ("fatal", NULL);
 	}
 }
@@ -86,13 +86,13 @@ void	execute(char **argv, char **envp)
 		ft_pipes(fd, 0);
 }
 
-void	command(char **cmd, char **envp)
+void command(char **cmd, char **envp)
 {
 	int i = -1;
 	int pos = 0;
 	int nproc = 0;
 
-	while(cmd[++i])
+	while (cmd[++i])
 	{
 		if (!strcmp(cmd[i], "|") || !cmd[i + 1])
 		{
@@ -129,5 +129,5 @@ int main(int argc, char **argv, char **envp)
 		}
 		restorefd();
 	}
-	return(0);
+	return (0);
 }
