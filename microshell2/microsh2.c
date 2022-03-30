@@ -37,10 +37,10 @@ void error(char *message, char *argument)
         exit(1);
 }
 
-void    restoreffd(void)
+void    restorefd(void)
 {
     int temp = dup(0);
-    if (dup2(backup, 0) == -1 || close(tmp) == -1)
+    if (dup2(backup, 0) == -1 || close(temp) == -1)
         error ("fatal", NULL);
 }
 
@@ -48,7 +48,7 @@ void ft_pipes(int fd[2], int opcl)
 {
     if (pipes)
     {
-        if (dup2(fp[opcl], opcl) == -1 || close(fd[READ]) == -1 || close(fd[WRITE]) == -1)
+        if (dup2(fd[opcl], opcl) == -1 || close(fd[READ]) == -1 || close(fd[WRITE]) == -1)
             error ("fatal", NULL);
     }
 }
@@ -68,7 +68,7 @@ void cd(char **argv)
 void execute(char **argv, char **envp)
 {
     pid_t   pid;
-    int     fd;
+    int     fd[2];
 
     if (!strcmp(argv[0], "cd"))
         return (cd(argv));
@@ -94,7 +94,7 @@ void commands(char **cmd, char **envp)
 
     while (cmd[++i])
     {
-        if (!strcmp(cmd[i], "|", || !cmd[i + 1]))
+        if (!strcmp(cmd[i], "|") || !cmd[i + 1]))
         {
             pipes = 0;
             if (!strcmp(cmd[i], "|"))
@@ -104,7 +104,7 @@ void commands(char **cmd, char **envp)
             }
             execute(cmd + pos, envp);
             pos = i + 1;
-            nproc++
+            nproc++;
         }
     }
     while (nproc-- > 0)

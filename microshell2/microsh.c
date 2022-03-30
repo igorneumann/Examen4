@@ -39,7 +39,7 @@ void error(char *message, char *argument)
 void    restorefd(void)
 {
     int temp = dup(0);
-    if (dup2(backup, 0) == -1 || close(tmp) == -1)
+    if (dup2(backup, 0) == -1 || close(temp) == -1)
         error("fatal", NULL);
 }
 
@@ -47,7 +47,7 @@ void    ft_pipes(int fd[2], int opcl)
 {
     if (pipes)
     {
-        if (dup2(fp[opcl], opcl) == -1 || close(fd[READ]) == -1 || close(fd[WRITE]) == -1)
+        if (dup2(fd[opcl], opcl) == -1 || close(fd[READ]) == -1 || close(fd[WRITE]) == -1)
             error ("fatal", NULL);
     }
 }
