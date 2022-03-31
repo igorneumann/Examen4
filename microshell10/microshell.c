@@ -37,10 +37,10 @@ void ft_cd(char **argv)
 
 int main(int argc, char **argv, char **env)
 {
-	int j = 0, j_prev, type, pipes[2];
+	int j = 0, type = 1, j_prev, pipes[2];
 	char **command;
 	pid_t pid;
-	while (++j < argc)
+	while (++j < argc && type != 0)
 	{
 		j_prev = j;
 		type = 0;
