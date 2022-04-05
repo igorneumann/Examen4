@@ -11,17 +11,17 @@ int ft_strlen(char *str)
 	return(i);
 }
 
-void	ft_error(void)
-{
-	write(2, "Error: fatal\n", ft_strlen("Error: fatal\n"));
-	exit(1);
-}
-
-void ft_msg(char *msg, char *com)
+void ft_error(char *msg, char *com)
 {
 	write(2, msg, ft_strlen(msg));
 	write(2, com, ft_strlen(com));
 	write(2, "\n", 1);
+}
+
+void ft_fatal(void)
+{
+	ft_error("error: ", "fatal");
+	exit(1);
 }
 
 void ft_cd(char **argv)
@@ -30,38 +30,38 @@ void ft_cd(char **argv)
 	while (argv[i])
 		i++;
 	if (i != 2)
-		write(2, "error: cd: bad arguments\n", ft_strlen("error: cd: bad arguments\n"));
+		ft_error("error: ", "bad arguments");
 	else if (chdir(argv[1]))
-		ft_msg("error: cd: cannot change directory to ", argv[1]);
+		ft_error("error: cannot change directory to: ", argv[1]);
 }
 
-int main(int argc, char **argv, char **env)
+int main (int argc, char **argv, char **env)
 {
-	int j = 0, type = 1, j_prev, pipes[2];
+	int i = 0, type = 1, i_prev, pipes[2];
 	char **command;
 	pid_t pid;
-	while(++j < argc && type != 0)
+	while (++i < argc && type != 0)
 	{
-		j_prev = j;
+		i_prev = i;
 		type = 0;
-		while (j < argc && strcmp(argv[j], "|") && strcmp(argv[j], ";"))
-			j++;
-		if (j < argc)
-			type = argv[j][0];
-		argv[j] = 0;
-		command = &argv[j_prev];
+		while (i < argc && strcmp(argv[i], "|") && strcmp(argv[i], ";"))
+			i++;
+		if (i < argc)
+			type = argv[i][0];
+		argv[i] = 0;
+		command = &argv[i_prev];
 		if (type == '|' && pipe(pipes))
-			ft_error();
+			ft_fatal();
 		if ((pid = fork()) < 0)
-			ft_error();
+			ft_fatal();
 		if (pid == 0)
 		{
 			if (type == '|')
 				dup2(pipes[1], 1);
 			if (!strcmp(command[0], "cd"))
 				ft_cd(command);
-			else if(execve(command[0], command, env))
-				ft_msg("error: cannot execute ", command[0]);
+			else if (execve(command[0], command, env))
+				ft_error("Error: cannot execute: ", command[0]);
 			exit(0);
 		}
 		else
@@ -73,5 +73,5 @@ int main(int argc, char **argv, char **env)
 			close(pipes[0]);
 		}
 	}
-	return(0);
+	return (0);
 }

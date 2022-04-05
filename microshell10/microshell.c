@@ -1,6 +1,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/wait.h>
 
 int ft_strlen(char *str)
 {
@@ -16,7 +17,7 @@ void	ft_error(void)
 	exit(1);
 }
 
-ft_msg(char *str, char *com)
+void ft_msg(char *str, char *com)
 {
 	write(2, str, ft_strlen(str));
 	write(2, com, ft_strlen(com));
@@ -25,7 +26,7 @@ ft_msg(char *str, char *com)
 
 void ft_cd(char **argv)
 {
-	int i = 1;
+	int i = 0;
 
 	while (argv[i])
 		i++;
@@ -47,22 +48,22 @@ int main(int argc, char **argv, char **env)
 		while (j < argc && strcmp(argv[j], "|") && strcmp(argv[j], ";"))
 			j++;
 		if (j < argc)
-			type = &argv[j][0];
+			type = argv[j][0];
 		argv[j] = 0;
 		command = &argv[j_prev];
-		if (type = "|" && pipe(pipes))
+		if (type == '|' && pipe(pipes))
 			ft_error();
 		if ((pid = fork()) < 0)
 			ft_error();
 		if (pid == 0)
 		{
 			if (type == '|')
-				dup2(pipe[1], 1);
+				dup2(pipes[1], 1);
 			if (!strcmp(command[0], "cd"))
 				ft_cd(command);
 			else if(execve(command[0], command, env))
-				ft_msg("error: cannot execute", command[0])
-			exit(0)
+				ft_msg("error: cannot execute ", command[0]);
+			exit(0);
 		}
 		else
 			wait(0);

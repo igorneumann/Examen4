@@ -8,18 +8,18 @@ int ft_strlen(char *str)
 	int i = 0;
 	while (str[i])
 		i++;
-	return (i);
+	return(i);
 }
 
-void ft_error(void)
+void	ft_error(void)
 {
-	write(2, "fatal error.\n", ft_strlen("fatal error.\n"));
+	write(2, "Error: fatal\n", ft_strlen("Error: fatal\n"));
 	exit(1);
 }
 
-void ft_msg(char*str, char *com)
+void ft_msg(char *msg, char *com)
 {
-	write(2, str, ft_strlen(str));
+	write(2, msg, ft_strlen(msg));
 	write(2, com, ft_strlen(com));
 	write(2, "\n", 1);
 }
@@ -27,7 +27,6 @@ void ft_msg(char*str, char *com)
 void ft_cd(char **argv)
 {
 	int i = 1;
-
 	while (argv[i])
 		i++;
 	if (i != 2)
@@ -35,12 +34,13 @@ void ft_cd(char **argv)
 	else if (chdir(argv[1]))
 		ft_msg("error: cd: cannot change directory to ", argv[1]);
 }
+
 int main(int argc, char **argv, char **env)
 {
-	int	j = 0, j_prev, type, pipes[2];
+	int j = 0, type = 1, j_prev, pipes[2];
 	char **command;
 	pid_t pid;
-	while (++j < argc)
+	while(++j < argc && type != 0)
 	{
 		j_prev = j;
 		type = 0;
@@ -60,8 +60,8 @@ int main(int argc, char **argv, char **env)
 				dup2(pipes[1], 1);
 			if (!strcmp(command[0], "cd"))
 				ft_cd(command);
-			else if (execve(command[0], command, env))
-				ft_msg("error: cannot execute", command[0]);
+			else if(execve(command[0], command, env))
+				ft_msg("error: cannot execute ", command[0]);
 			exit(0);
 		}
 		else
@@ -72,8 +72,6 @@ int main(int argc, char **argv, char **env)
 			close(pipes[1]);
 			close(pipes[0]);
 		}
-		if (type == 0)
-			break;
 	}
-	return (0);
+	return(0);
 }
