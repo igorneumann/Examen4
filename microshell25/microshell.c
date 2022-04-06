@@ -6,16 +6,16 @@
 int ft_strlen(char *str)
 {
 	int i = 0;
-	while (str[i])
+	while(str[i])
 		i++;
 	return (i);
 }
 
 void ft_error(char *msg, char *com)
 {
-	write(2, msg, ft_strlen(msg));
-	write(2, com, ft_strlen(com));
-	write(2, "\n", 1);
+	write (2, msg, ft_strlen(msg));
+	write (2, com, ft_strlen(com));
+	write (2, "\n", 1);
 }
 
 void ft_fatal(void)
@@ -35,7 +35,7 @@ void ft_cd(char **argv)
 		ft_error("error: cannot change directory to", argv[1]);
 }
 
-int main (int argc, char **argv, char **env)
+int main(int argc, char **argv, char **env)
 {
 	int i = 0, type = 1, i_prev, pipes[2];
 	char **command;

@@ -6,7 +6,7 @@
 int ft_strlen(char *str)
 {
 	int i = 0;
-	while (str[i])
+	while(str[i])
 		i++;
 	return (i);
 }
@@ -35,21 +35,20 @@ void ft_cd(char **argv)
 		ft_error("error: cannot change directory to", argv[1]);
 }
 
-int main (int argc, char **argv, char **env)
+int main(int argc, char **argv, char **env)
 {
-	int i = 0, type = 1, i_prev, pipes[2];
+	int i = 0, type = 1, pipes[2];
 	char **command;
 	pid_t pid;
-	while (++i < argc && type != 0)
+	while(++i < argc && type != 0)
 	{
 		type = 0;
-		i_prev = i;
+		command = &argv[i];
 		while (i < argc && strcmp(argv[i], "|") && strcmp(argv[i], ";"))
 			i++;
 		if (i < argc)
 			type = argv[i][0];
 		argv[i] = 0;
-		command = &argv[i_prev];
 		if (type == '|' && pipe(pipes))
 			ft_fatal();
 		if ((pid = fork()) < 0)
@@ -62,16 +61,16 @@ int main (int argc, char **argv, char **env)
 				ft_cd(command);
 			else if (execve(command[0], command, env))
 				ft_error("error: cannot execute: ", command[0]);
-			exit(0);
+			exit (0);
 		}
 		else
-			wait (0);
+			wait(0);
 		if (type == '|')
 		{
 			dup2(pipes[0], 0);
 			close(pipes[1]);
 			close(pipes[0]);
 		}
-	}
+	}	
 	return (0);
 }

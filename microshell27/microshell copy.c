@@ -8,7 +8,7 @@ int ft_strlen(char *str)
 	int i = 0;
 	while (str[i])
 		i++;
-	return (i);
+	return(i);
 }
 
 void ft_error(char *msg, char *com)
@@ -21,18 +21,18 @@ void ft_error(char *msg, char *com)
 void ft_fatal(void)
 {
 	ft_error("error: ", "fatal");
-	exit(1);
+	exit (1);
 }
 
-void ft_cd(char **argv)
+void	ft_cd(char **argv)
 {
 	int i = 0;
 	while (argv[i])
 		i++;
 	if (i != 2)
-		ft_error("error: ", "bad arguments");
+		ft_error("Error: ", "bad arguments");
 	else if (chdir(argv[1]))
-		ft_error("error: cannot change directory to", argv[1]);
+		ft_error("error: cannot change directory to: ", argv[1]);
 }
 
 int main (int argc, char **argv, char **env)
@@ -61,8 +61,8 @@ int main (int argc, char **argv, char **env)
 			if (!strcmp(command[0], "cd"))
 				ft_cd(command);
 			else if (execve(command[0], command, env))
-				ft_error("error: cannot execute: ", command[0]);
-			exit(0);
+				ft_error("error: cannot execute ", command[0]);
+			exit (0);
 		}
 		else
 			wait (0);

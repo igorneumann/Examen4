@@ -21,7 +21,7 @@ void ft_error(char *msg, char *com)
 void ft_fatal(void)
 {
 	ft_error("error: ", "fatal");
-	exit(1);
+	exit (1);
 }
 
 void ft_cd(char **argv)
@@ -32,24 +32,23 @@ void ft_cd(char **argv)
 	if (i != 2)
 		ft_error("error: ", "bad arguments");
 	else if (chdir(argv[1]))
-		ft_error("error: cannot change directory to", argv[1]);
+		ft_error("error: cannot change directory to: ", argv[1]);
 }
 
-int main (int argc, char **argv, char **env)
+int main(int argc, char **argv, char **env)
 {
-	int i = 0, type = 1, i_prev, pipes[2];
+	int i = 0, type = 1, pipes[2];
 	char **command;
 	pid_t pid;
 	while (++i < argc && type != 0)
 	{
 		type = 0;
-		i_prev = i;
+		command = &argv[i];
 		while (i < argc && strcmp(argv[i], "|") && strcmp(argv[i], ";"))
 			i++;
 		if (i < argc)
 			type = argv[i][0];
 		argv[i] = 0;
-		command = &argv[i_prev];
 		if (type == '|' && pipe(pipes))
 			ft_fatal();
 		if ((pid = fork()) < 0)
@@ -72,6 +71,6 @@ int main (int argc, char **argv, char **env)
 			close(pipes[1]);
 			close(pipes[0]);
 		}
-	}
+	}	
 	return (0);
 }
